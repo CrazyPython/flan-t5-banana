@@ -1,14 +1,20 @@
-from transformers import pipeline
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 import torch
 
 # Init is ran on server startup
 # Load your model to GPU as a global variable here using the variable name "model"
 def init():
-    global model
+    global model, tokenizer
     
     device = 0 if torch.cuda.is_available() else -1
-    model = pipeline('text2text-generation', model='google/flan-t5-xxl', device=device,
-                     model_kwargs=dict(load_in_8bit=True))
+    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-xxl")
+    model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-xxl", device_map="auto", load_in_8bit=True)
+
+    input_text = "translate English to German: How old are you?"
+    input_ids = tokenizer(input_text, return_tensors="pt").input_ids.to("cuda")
+
+    outputs = model.generate(input_ids)
+    tokenizer.decode(outputs[0])
 
 # Inference is ran for every server call
 # Reference your preloaded global model variable here.
@@ -21,7 +27,9 @@ def inference(model_inputs:dict) -> dict:
         return {'message': "No prompt provided"}
     
     # Run the model
-    result = model(prompt)
+    input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to('cuda')
+    outputs = model.generate(input_ids)
+    result = tokenizer.decode(outputs[0])
 
     # Return the results as a dictionary
     return result
