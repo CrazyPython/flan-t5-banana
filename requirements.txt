@@ -1,5 +1,5 @@
 sanic==22.6.2
 transformers
 accelerate
-bitsandbytes
+bitsandbytes-cuda113
 sentencepiece # required by T5Tokenizer
