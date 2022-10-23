@@ -7,7 +7,8 @@ from transformers import pipeline
 
 def download_model():
     # do a dry run of loading the huggingface model, which will download weights
-    pipeline('text2text-generation', model='google/flan-t5-xxl')
+    pipeline('text2text-generation', model='google/flan-t5-xxl',
+             model_kwargs=dict(load_in_8bit=True))
 
 if __name__ == "__main__":
     download_model()

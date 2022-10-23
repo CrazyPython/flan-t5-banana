@@ -7,7 +7,8 @@ def init():
     global model
     
     device = 0 if torch.cuda.is_available() else -1
-    model = pipeline('text2text-generation', model='google/flan-t5-xxl', device=device)
+    model = pipeline('text2text-generation', model='google/flan-t5-xxl', device=device,
+                     model_kwargs=dict(load_in_8bit=True))
 
 # Inference is ran for every server call
 # Reference your preloaded global model variable here.
