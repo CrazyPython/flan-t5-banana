@@ -6,12 +6,11 @@ import torch
 
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
+"""You cannot use CUDA here, because the driver is not available during container build time."""
 def download_model():
     # do a dry run of loading the huggingface model, which will download weights
     tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-xxl")
     model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-xxl", torch_dtype=torch.float16)
-    input_text = "translate English to German: How old are you?"
-    input_ids = tokenizer(input_text, return_tensors="pt").input_ids.to("cuda")
 
 
 if __name__ == "__main__":
