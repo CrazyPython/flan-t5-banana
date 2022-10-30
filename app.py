@@ -8,7 +8,7 @@ def init():
     global model, tokenizer
 
     device = 0 if torch.cuda.is_available() else -1
-    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-xxl")
+    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-xl")
     model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-xl", device_map="auto", torch_dtype=torch.bfloat16)
 
     input_text = "translate English to German: How old are you?"
@@ -27,7 +27,7 @@ def inference(model_inputs: dict) -> dict:
 
     # Run the model
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to('cuda')
-    outputs = model.generate(input_ids)
+    outputs = model.generate(input_ids, **model_inputs)
     result = tokenizer.decode(outputs[0])
 
     # Return the results as a dictionary
