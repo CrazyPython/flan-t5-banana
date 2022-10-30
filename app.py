@@ -9,7 +9,7 @@ def init():
 
     device = 0 if torch.cuda.is_available() else -1
     tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-xl")
-    model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-xl", device_map="auto"
+    model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-xl", device=device,
                                                        # torch_dtype=torch.bfloat16
     )
 
